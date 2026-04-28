@@ -99,41 +99,41 @@ http://localhost:5173
 
 ### Auth
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| POST | `/api/auth/register` | Register user |
-| POST | `/api/auth/login` | Login user |
-| GET | `/api/auth/profile` | Current user profile |
+| Method | Endpoint             | Purpose              |
+| ------ | -------------------- | -------------------- |
+| POST   | `/api/auth/register` | Register user        |
+| POST   | `/api/auth/login`    | Login user           |
+| GET    | `/api/auth/profile`  | Current user profile |
 
 ### Products
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/api/products` | List products |
-| GET | `/api/products/:id` | Product details |
-| POST | `/api/products` | Admin create product |
-| PUT | `/api/products/:id` | Admin update product |
+| Method | Endpoint            | Purpose               |
+| ------ | ------------------- | --------------------- |
+| GET    | `/api/products`     | List products         |
+| GET    | `/api/products/:id` | Product details       |
+| POST   | `/api/products`     | Admin create product  |
+| PUT    | `/api/products/:id` | Admin update product  |
 | DELETE | `/api/products/:id` | Admin archive product |
 
 ### Cart
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/api/cart` | Get user cart |
-| POST | `/api/cart/add` | Add item to cart |
-| PUT | `/api/cart/update/:productId` | Update item quantity |
-| DELETE | `/api/cart/remove/:productId` | Remove item |
-| DELETE | `/api/cart/clear` | Clear cart |
+| Method | Endpoint                      | Purpose              |
+| ------ | ----------------------------- | -------------------- |
+| GET    | `/api/cart`                   | Get user cart        |
+| POST   | `/api/cart/add`               | Add item to cart     |
+| PUT    | `/api/cart/update/:productId` | Update item quantity |
+| DELETE | `/api/cart/remove/:productId` | Remove item          |
+| DELETE | `/api/cart/clear`             | Clear cart           |
 
 ### Orders
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| POST | `/api/orders` | Create order |
-| GET | `/api/orders/my-orders` | User order history |
-| GET | `/api/orders/:id` | Get one order |
-| GET | `/api/orders` | Admin list all orders |
-| PUT | `/api/orders/:id/status` | Admin update order/payment status |
+| Method | Endpoint                 | Purpose                           |
+| ------ | ------------------------ | --------------------------------- |
+| POST   | `/api/orders`            | Create order                      |
+| GET    | `/api/orders/my-orders`  | User order history                |
+| GET    | `/api/orders/:id`        | Get one order                     |
+| GET    | `/api/orders`            | Admin list all orders             |
+| PUT    | `/api/orders/:id/status` | Admin update order/payment status |
 
 ## First Draft Limitations
 
@@ -273,3 +273,5 @@ To override it temporarily in PowerShell:
 $env:E2E_MONGO_URI="mongodb://127.0.0.1:27017/my_custom_e2e_db"
 npm run test:e2e
 ```
+
+Test
