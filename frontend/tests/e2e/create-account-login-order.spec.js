@@ -8,7 +8,7 @@ test.describe('Customer ecommerce journey', () => {
     const customer = {
       name: `Playwright Customer ${uniqueId}`,
       email: `playwright.customer.${uniqueId}@example.com`,
-      password: 'TestPassword123!'
+      password: 'TestPassword123!',
     };
 
     await test.step('Assert backend API and seeded catalogue are ready', async () => {
@@ -39,6 +39,11 @@ test.describe('Customer ecommerce journey', () => {
       await page.getByLabel(/^email$/i).fill(customer.email);
       await page.getByLabel(/^password$/i).fill(customer.password);
       await page.getByLabel(/confirm password/i).fill(customer.password);
+
+      await expect(page.getByTestId('register-submit-button')).toBeDisabled();
+      await page.getByLabel(/i accept the terms and conditions/i).check();
+      await expect(page.getByTestId('register-submit-button')).toBeEnabled();
+
       await page.getByRole('button', { name: /^register$/i }).click();
 
       await expect(page).toHaveURL(/\/products$/);
@@ -68,7 +73,10 @@ test.describe('Customer ecommerce journey', () => {
 
     await test.step('Add a product to the cart', async () => {
       await expect(page.getByRole('link', { name: /view details/i }).first()).toBeVisible();
-      await page.getByRole('link', { name: /view details/i }).first().click();
+      await page
+        .getByRole('link', { name: /view details/i })
+        .first()
+        .click();
 
       await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible();
       await page.getByLabel(/quantity/i).fill('1');

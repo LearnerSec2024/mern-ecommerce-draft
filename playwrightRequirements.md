@@ -10,6 +10,36 @@
 * New windows/tabs
 * Iframes
 
+## Section 1 Implementation Notes — Register Page
+
+Status: Partially complete
+
+Implemented inside the real customer registration flow rather than a standalone automation playground.
+
+UI location:
+
+- Page: `/register`
+- Navbar/Home link: `Create account`
+- Code file: `frontend/src/pages/Register.jsx`
+- Style file: `frontend/src/styles.css`
+- Test file: `frontend/tests/e2e/create-account-login-order.spec.js`
+
+Features implemented:
+
+| Requirement | Status | UI location | Code location | Suggested Playwright locator |
+|---|---|---|---|---|
+| Text input | Complete | Register page, Name field | `Register.jsx` | `getByLabel(/^name$/i)` |
+| Email validation field | Complete | Register page, Email field | `Register.jsx` | `getByTestId('register-email-input')` |
+| Password field | Complete | Register page, Password field | `Register.jsx` | `getByLabel(/^password$/i)` |
+| File upload | Complete | Register page, Profile picture upload | `Register.jsx` | `getByTestId('register-profile-picture-input')` |
+| Checkboxes | Complete | Marketing opt-in and terms checkbox | `Register.jsx` | `getByTestId('register-terms-checkbox')` |
+| Disabled → enabled button | Complete | Register button enables after valid form + terms | `Register.jsx` | `getByTestId('register-submit-button')` |
+| Loading button | Complete | Register button shows `Creating account...` | `Register.jsx` | `getByRole('button', { name: /creating account/i })` |
+
+Teaching value:
+
+- Students can practise label locators, test IDs, email validation assertions, password rule assertions, file upload, checkbox selection, and disabled/enabled button assertions in a realistic registration flow.
+
 Add these:
 
 ### Inputs & Forms
