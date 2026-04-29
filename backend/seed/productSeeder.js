@@ -266,14 +266,22 @@ const seed = async () => {
     await Order.deleteMany();
     await Cart.deleteMany();
     await Product.deleteMany();
-    await User.deleteMany();
 
-    await User.create({
-      name: 'Admin User',
-      email: 'admin@example.com',
-      password: 'Admin123!',
-      role: 'admin',
-    });
+    // Keep existing users so saved browser logins continue to work.
+    // Only create the admin user if it does not already exist.
+    const existingAdmin = await User.findOne({ email: 'admin@example.com' });
+
+    if (!existingAdmin) {
+      await User.create({
+        name: 'Admin User',
+        email: 'admin@example.com',
+        password: 'Admin123!',
+        role: 'admin',
+      });
+    } else if (existingAdmin.role !== 'admin') {
+      existingAdmin.role = 'admin';
+      await existingAdmin.save();
+    }
 
     await Product.insertMany(products);
 

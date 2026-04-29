@@ -6,6 +6,7 @@
     "start": "powershell -ExecutionPolicy Bypass -File .\\start-local.ps1",
     "start:install": "powershell -ExecutionPolicy Bypass -File .\\start-local.ps1 -Install",
     "start:seed": "powershell -ExecutionPolicy Bypass -File .\\start-local.ps1 -Seed",
-    "test:e2e": "cd frontend && npm run test:e2e"
+    "test:e2e": "cd frontend && npm run test:e2e",
+    "images:download": "cd backend && node scripts/download-product-images.mjs"
   }
 }

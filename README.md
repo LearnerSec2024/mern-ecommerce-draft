@@ -17,17 +17,17 @@ The project also includes Playwright end-to-end tests and GitHub Actions so it c
 
 - User registration and login with JWT
 - Password hashing with bcrypt
-- Product catalogue
-- Product search, category filter and sorting
+- Product catalogue with categories, sorting and search
 - Product details page
+- Product images stored locally in the frontend public folder
 - Authenticated cart
 - Add, update, remove and clear cart items
 - Checkout with mock payment
 - Order creation and user order history
 - Admin product management
 - Admin order status management
-- Seed data including `Fruits & Vegetables` category
-- Safer category slugs to avoid special-character issues
+- Seeded sample product catalogue
+- Seed behaviour that keeps existing users while refreshing shop data
 
 ### Security Features
 
@@ -58,9 +58,10 @@ Current implemented areas include:
 - Price range slider
 - Hover-revealed wishlist actions
 - Drag product to cart drop zone
-- Lazy/infinite scroll sentinel
+- Infinite loading for all products
+- Pagination for category views
 
-The implementation notes are tracked in:
+Implementation notes are tracked in:
 
 ```txt
 playwrightRequirements.md
@@ -78,12 +79,18 @@ mern-ecommerce-draft/
 │   ├── middleware/
 │   ├── models/
 │   ├── routes/
+│   ├── scripts/
+│   │   └── download-product-images.mjs
 │   ├── seed/
+│   │   └── productSeeder.js
 │   ├── utils/
 │   ├── .env.example
 │   ├── package.json
 │   └── server.js
 ├── frontend/
+│   ├── public/
+│   │   └── images/
+│   │       └── products/
 │   ├── scripts/
 │   ├── src/
 │   │   ├── api/
@@ -97,6 +104,7 @@ mern-ecommerce-draft/
 │   └── playwright.config.js
 ├── .github/
 │   └── workflows/
+│       └── playwright.yml
 ├── implementation_plan.md
 ├── playwrightRequirements.md
 ├── postman_collection.json
@@ -128,6 +136,28 @@ You can check MongoDB with:
 ```powershell
 Get-Service MongoDB
 ```
+
+---
+
+## Environment Files
+
+The real `.env` files are not committed to GitHub.
+
+The repository includes example files only:
+
+```txt
+backend/.env.example
+frontend/.env.example
+```
+
+Do not commit:
+
+```txt
+backend/.env
+frontend/.env
+```
+
+The startup script can create `.env` files from `.env.example` if they are missing.
 
 ---
 
@@ -167,70 +197,29 @@ http://localhost:5000/api/health
 
 ---
 
-## One-Command Local Startup
+## Root Commands
 
-The root-level `package.json` calls the PowerShell startup script.
+Run these commands from the project root.
 
-### Normal Daily Startup
-
-```powershell
-npm start
-```
-
-Use this for normal local development.
-
-### First-Time Setup
-
-If this is your first time running the project, or if `node_modules` is missing, run:
-
-```powershell
-npm run start:install
-```
-
-This installs dependencies for both:
-
-```txt
-backend/
-frontend/
-```
-
-Then it starts the app.
-
-### Force Seed the Database
-
-To reset and reload sample data:
-
-```powershell
-npm run start:seed
-```
-
-Be careful: the seed script may clear and recreate existing local data.
-
-### Full Fresh Setup
-
-To install dependencies and force seed the database:
-
-```powershell
-npm run start:install -- -Seed
-```
-
-Alternatively, run the PowerShell script directly:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Install -Seed
-```
+| Command                   | Purpose                                                            |
+| ------------------------- | ------------------------------------------------------------------ |
+| `npm start`               | Start MongoDB check, backend, frontend and browser                 |
+| `npm run start:install`   | Install backend/frontend dependencies, then start the app          |
+| `npm run start:seed`      | Force seed shop data, then start the app                           |
+| `npm run images:download` | Download/relink real product images using the Pexels helper script |
+| `npm run test:e2e`        | Run Playwright tests from the frontend project                     |
 
 ---
 
-## What the Startup Script Does
+## One-Command Local Startup
 
-The startup script is:
+The root-level `package.json` calls the PowerShell startup script:
 
 ```txt
 start-local.ps1
 ```
 
-It is useful because the app has three moving parts:
+The app has three moving parts:
 
 ```txt
 MongoDB database
@@ -256,6 +245,39 @@ Ctrl + C
 ```
 
 in both the backend and frontend PowerShell windows.
+
+---
+
+## First-Time Setup
+
+If this is your first time running the project, or if `node_modules` is missing, run:
+
+```powershell
+npm run start:install
+```
+
+This installs dependencies for both:
+
+```txt
+backend/
+frontend/
+```
+
+Then it starts the app.
+
+---
+
+## Normal Daily Startup
+
+For normal local development, use:
+
+```powershell
+npm start
+```
+
+This starts the app and keeps existing local data.
+
+Use `npm run start:seed` only when you intentionally want to reset the sample shop data.
 
 ---
 
@@ -313,6 +335,220 @@ Frontend runs on:
 ```txt
 http://localhost:5173
 ```
+
+---
+
+## Database Notes
+
+This app uses MongoDB.
+
+MongoDB stores data in collections, similar to tables in SQL databases.
+
+Important collections include:
+
+```txt
+users
+products
+carts
+orders
+```
+
+The frontend does not create products by itself. Products are loaded from MongoDB through the backend API.
+
+The seed script inserts sample products into MongoDB so the catalogue has products to display.
+
+Seed script:
+
+```txt
+backend/seed/productSeeder.js
+```
+
+---
+
+## Seed Data Behaviour
+
+The seed script is useful when you want to reset or rebuild the sample shop catalogue.
+
+Run from the project root:
+
+```powershell
+npm run start:seed
+```
+
+Or run directly from the backend folder:
+
+```powershell
+cd backend
+npm run seed
+```
+
+### What Gets Reset During Seeding
+
+When the seed script runs, it resets the shop-related data:
+
+| Collection          | What happens                                   |
+| ------------------- | ---------------------------------------------- |
+| `products`          | Deleted and recreated from the seed file       |
+| `carts`             | Deleted                                        |
+| `orders`            | Deleted                                        |
+| `users`             | Kept                                           |
+| `admin@example.com` | Created if missing, or corrected to admin role |
+
+Manually created customer users are preserved when reseeding. Their carts and orders are cleared.
+
+### Why Users Are Kept
+
+Users are kept so browser-saved login credentials continue to work across development sessions.
+
+Previously, reseeding deleted all users. This meant a saved email/password in the browser could stop working after the database was reseeded.
+
+The current seed behaviour avoids that by preserving users and only refreshing shop data.
+
+### When to Use `npm run start:seed`
+
+Use this command when:
+
+- Products are missing
+- Products are broken or need to be reset
+- You changed `backend/seed/productSeeder.js`
+- You want a clean product catalogue
+- You want to clear carts and orders
+- You want a clean demo state
+
+### Simple Rule
+
+```txt
+npm start                = daily startup, keep existing data
+npm run start:seed       = reset products, carts and orders, keep users
+npm run images:download  = relink/download real product images
+```
+
+---
+
+## Product Images
+
+This project supports real product images for seeded products.
+
+Images are downloaded from Pexels using a helper script and saved locally inside the frontend public folder. The product records in MongoDB are then updated to point to those local image paths.
+
+This keeps the app stable because images are loaded from the local project instead of hotlinking external image URLs.
+
+### Image Storage Location
+
+Downloaded product images are saved here:
+
+```txt
+frontend/public/images/products/
+```
+
+Example image paths:
+
+```txt
+frontend/public/images/products/electronics/wireless-headphones.jpg
+frontend/public/images/products/fruits/organic-banana-bunch.jpg
+frontend/public/images/products/home-and-kitchen/ceramic-coffee-mug.jpg
+```
+
+In MongoDB, each product stores a relative image path like:
+
+```txt
+/images/products/electronics/wireless-headphones.jpg
+```
+
+The frontend can render this directly because files inside `frontend/public` are served publicly by Vite.
+
+### Pexels API Key Setup
+
+The image download script requires a Pexels API key.
+
+Add the key to:
+
+```txt
+backend/.env
+```
+
+Example:
+
+```env
+PEXELS_API_KEY=your_pexels_api_key_here
+```
+
+Do not commit the real API key to GitHub.
+
+### Download or Relink Product Images
+
+From the project root, run:
+
+```powershell
+npm run images:download
+```
+
+This command runs:
+
+```powershell
+cd backend && node scripts/download-product-images.mjs
+```
+
+The image script does the following:
+
+1. Connects to the local MongoDB database
+2. Reads all products from the `products` collection
+3. Searches Pexels for a suitable image for each product
+4. Downloads the image into `frontend/public/images/products/`
+5. Updates each product record in MongoDB with the local image path
+6. Skips images that have already been downloaded
+
+### Important: Seeding and Images
+
+If you run:
+
+```powershell
+npm run start:seed
+```
+
+the database products may be reset.
+
+After reseeding, run:
+
+```powershell
+npm run images:download
+```
+
+Recommended reset flow:
+
+```powershell
+npm run start:seed
+npm run images:download
+npm start
+```
+
+### Verifying Images
+
+Start the app:
+
+```powershell
+npm start
+```
+
+Then open:
+
+```txt
+http://localhost:5173/products
+```
+
+Check:
+
+- Products page
+- Home page product section
+- Category views
+- Product details page
+
+If images do not appear, confirm that:
+
+1. The image files exist under `frontend/public/images/products/`
+2. The product `image` field in MongoDB starts with `/images/products/`
+3. The app has been refreshed or restarted
+4. `npm run images:download` was run after the latest database seed
 
 ---
 
@@ -391,7 +627,8 @@ The advanced UI interaction test covers:
 4. Hover-revealed wishlist button
 5. Hover tooltip
 6. Drag product card to cart drop zone
-7. Infinite/lazy scroll sentinel
+7. Infinite loading for all products
+8. Pagination inside category views
 
 ---
 
@@ -525,70 +762,6 @@ The workflow file is located at:
 
 ---
 
-## Environment Files
-
-The real `.env` files are not committed to GitHub.
-
-The repository includes example files only:
-
-```txt
-backend/.env.example
-frontend/.env.example
-```
-
-This is intentional.
-
-Do not commit:
-
-```txt
-backend/.env
-frontend/.env
-```
-
----
-
-## Database Notes
-
-This app uses MongoDB.
-
-MongoDB stores data in collections, similar to tables in SQL databases.
-
-Important collections include:
-
-```txt
-users
-products
-carts
-orders
-```
-
-The frontend does not create products by itself. Products are loaded from MongoDB through the backend API.
-
-The seed script inserts sample products into MongoDB so the catalogue has products to display.
-
-Seed script:
-
-```txt
-backend/seed/productSeeder.js
-```
-
-Run seed manually:
-
-```powershell
-cd backend
-npm run seed
-```
-
-Or use the startup script:
-
-```powershell
-npm start
-```
-
-The startup script will seed automatically if no products are found.
-
----
-
 ## Troubleshooting
 
 ### MongoDB service not found
@@ -613,11 +786,10 @@ If the product catalogue is empty, run:
 npm run start:seed
 ```
 
-Or:
+If products show but images are missing, run:
 
 ```powershell
-cd backend
-npm run seed
+npm run images:download
 ```
 
 ### Port already in use
@@ -673,6 +845,7 @@ Run:
 
 ```powershell
 npm run start:seed
+npm run images:download
 ```
 
 ---
@@ -680,7 +853,7 @@ npm run start:seed
 ## Current Limitations
 
 - Payment is mocked, not integrated with Stripe or another payment provider.
-- Product images currently use URLs or placeholders.
+- Product image download is helper-script based, not yet built into the admin UI.
 - Product reviews are not yet implemented.
 - Forgot-password and email verification are not yet implemented.
 - Admin dashboard is functional but basic.
@@ -692,7 +865,7 @@ npm run start:seed
 
 1. Continue implementing `playwrightRequirements.md` section by section.
 2. Add stronger frontend form validation.
-3. Add product image upload using Cloudinary or S3.
+3. Add admin product image upload or an admin “Find image automatically” action.
 4. Add Stripe checkout or a richer mock payment flow.
 5. Add more API-level tests.
 6. Add pagination UI polish.
