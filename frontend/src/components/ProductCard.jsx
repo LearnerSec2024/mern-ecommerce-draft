@@ -1,6 +1,25 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+const categoryVisuals = {
+  'Fruits & Vegetables': { emoji: '🥭', className: 'visual-fruit' },
+  Electronics: { emoji: '🎧', className: 'visual-tech' },
+  Clothing: { emoji: '👟', className: 'visual-fashion' },
+  'Home & Kitchen': { emoji: '🏠', className: 'visual-home' },
+  'Beauty & Personal Care': { emoji: '✨', className: 'visual-beauty' },
+  'Sports & Outdoors': { emoji: '🏕️', className: 'visual-sports' },
+  'Books & Stationery': { emoji: '📚', className: 'visual-books' },
+  'Toys & Games': { emoji: '🧩', className: 'visual-toys' }
+};
+
 const ProductCard = ({ product, wishlisted = false, onWishlistToggle }) => {
+  const [imageError, setImageError] = useState(false);
+
+  const visual = categoryVisuals[product.category] || {
+    emoji: '🛒',
+    className: 'visual-default'
+  };
+
   const handleDragStart = (event) => {
     event.dataTransfer.effectAllowed = 'copy';
     event.dataTransfer.setData('application/x-product-id', product._id);
@@ -16,7 +35,19 @@ const ProductCard = ({ product, wishlisted = false, onWishlistToggle }) => {
       data-product-id={product._id}
     >
       <div className="product-image-wrap">
-        <img src={product.image} alt={product.name} />
+        {product.image && !imageError ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className={`product-image-fallback ${visual.className}`}>
+            <span>{visual.emoji}</span>
+            <strong>{product.name}</strong>
+            <small>{product.category}</small>
+          </div>
+        )}
 
         <button
           className="wishlist-button"

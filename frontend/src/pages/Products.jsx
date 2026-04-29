@@ -6,7 +6,8 @@ import ProductCard from '../components/ProductCard.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
 
-const PRODUCTS_PER_PAGE = 6;
+const PRODUCTS_PER_PAGE = 8;
+const MAX_PRICE = 300;
 
 const Products = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Products = () => {
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+
   const [filters, setFilters] = useState({
     search: '',
     category: 'all',
@@ -24,7 +26,8 @@ const Products = () => {
   });
 
   const [searchText, setSearchText] = useState('');
-  const [priceMax, setPriceMax] = useState(500);
+  const [priceMax, setPriceMax] = useState(MAX_PRICE);
+
   const [pageNumber, setPageNumber] = useState(1);
   const [pages, setPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -46,6 +49,9 @@ const Products = () => {
     }
   });
 
+  const isCategoryPaginationMode = filters.category !== 'all';
+  const hasMoreProducts = pageNumber < pages;
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowDelayedDeal(true);
@@ -60,7 +66,7 @@ const Products = () => {
     const fetchProducts = async () => {
       setError('');
 
-      if (pageNumber === 1) {
+      if (pageNumber === 1 || isCategoryPaginationMode) {
         setLoading(true);
       } else {
         setLoadingMore(true);
@@ -77,11 +83,12 @@ const Products = () => {
         });
 
         setProducts((currentProducts) => {
-          if (pageNumber === 1) {
+          if (pageNumber === 1 || isCategoryPaginationMode) {
             return data.products || [];
           }
 
           const existingIds = new Set(currentProducts.map((product) => product._id));
+
           const newProducts = (data.products || []).filter(
             (product) => !existingIds.has(product._id)
           );
@@ -105,29 +112,18 @@ const Products = () => {
     fetchProducts();
 
     return () => controller.abort();
-  }, [filters, pageNumber]);
-
-  const maxAvailablePrice = useMemo(() => {
-    const prices = products.map((product) => Number(product.price) || 0);
-    return Math.max(100, Math.ceil(...prices, 100));
-  }, [products]);
+  }, [filters, pageNumber, isCategoryPaginationMode]);
 
   useEffect(() => {
-    if (products.length > 0) {
-      setPriceMax(maxAvailablePrice);
+    if (isCategoryPaginationMode) {
+      return undefined;
     }
-  }, [maxAvailablePrice, products.length]);
 
-  const visibleProducts = useMemo(() => {
-    return products.filter((product) => Number(product.price) <= Number(priceMax));
-  }, [products, priceMax]);
-
-  const hasMoreProducts = pageNumber < pages;
-
-  useEffect(() => {
     const node = loadMoreRef.current;
 
-    if (!node) return undefined;
+    if (!node) {
+      return undefined;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -136,16 +132,20 @@ const Products = () => {
         }
       },
       {
-        rootMargin: '160px'
+        rootMargin: '180px'
       }
     );
 
     observer.observe(node);
 
     return () => observer.disconnect();
-  }, [hasMoreProducts, loading, loadingMore]);
+  }, [hasMoreProducts, loading, loadingMore, isCategoryPaginationMode]);
 
-  const resetAndApplyFilters = (nextFilters) => {
+  const visibleProducts = useMemo(() => {
+    return products.filter((product) => Number(product.price) <= Number(priceMax));
+  }, [products, priceMax]);
+
+  const applyFilters = (nextFilters) => {
     setProducts([]);
     setPageNumber(1);
     setFilters(nextFilters);
@@ -154,7 +154,7 @@ const Products = () => {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
 
-    resetAndApplyFilters({
+    applyFilters({
       ...filters,
       search: searchText.trim()
     });
@@ -163,10 +163,20 @@ const Products = () => {
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
 
-    resetAndApplyFilters({
+    applyFilters({
       ...filters,
       [name]: value
     });
+  };
+
+  const goToPreviousPage = () => {
+    setPageNumber((currentPage) => Math.max(1, currentPage - 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const goToNextPage = () => {
+    setPageNumber((currentPage) => Math.min(pages, currentPage + 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleWishlistToggle = (product) => {
@@ -317,7 +327,7 @@ const Products = () => {
             id="price-range"
             type="range"
             min="0"
-            max={maxAvailablePrice}
+            max={MAX_PRICE}
             step="5"
             value={priceMax}
             onChange={(event) => setPriceMax(event.target.value)}
@@ -337,7 +347,14 @@ const Products = () => {
       )}
 
       <p className="muted" data-testid="loaded-product-count">
-        Showing {visibleProducts.length} of {totalProducts || visibleProducts.length} products
+        {isCategoryPaginationMode ? (
+          <>
+            Showing {visibleProducts.length} products on page {pageNumber} of {pages}{' '}
+            ({totalProducts} total in {filters.category})
+          </>
+        ) : (
+          <>Loaded {products.length} of {totalProducts} products</>
+        )}
       </p>
 
       {loading && <p>Loading products...</p>}
@@ -350,28 +367,60 @@ const Products = () => {
         </div>
       )}
 
-      <div className="grid product-grid">
-        {visibleProducts.map((product) => (
-          <ProductCard
-            key={product._id}
-            product={product}
-            wishlisted={wishlist.includes(product._id)}
-            onWishlistToggle={handleWishlistToggle}
-          />
-        ))}
-      </div>
+      {!loading && !error && visibleProducts.length > 0 && (
+        <>
+          <div className="grid product-grid">
+            {visibleProducts.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                wishlisted={wishlist.includes(product._id)}
+                onWishlistToggle={handleWishlistToggle}
+              />
+            ))}
+          </div>
 
-      <div
-        ref={loadMoreRef}
-        className="infinite-scroll-sentinel"
-        data-testid="infinite-scroll-sentinel"
-      >
-        {loadingMore && <span>Loading more products...</span>}
-        {!loadingMore && hasMoreProducts && <span>Scroll to load more products</span>}
-        {!loadingMore && !hasMoreProducts && visibleProducts.length > 0 && (
-          <span>All matching products loaded</span>
-        )}
-      </div>
+          {isCategoryPaginationMode ? (
+            <div className="products-pagination" aria-label="Category product pagination">
+              <button
+                type="button"
+                className="button ghost"
+                onClick={goToPreviousPage}
+                disabled={pageNumber <= 1 || loading}
+                data-testid="products-previous-page"
+              >
+                &lt; Previous
+              </button>
+
+              <span data-testid="products-page-indicator">
+                Page {pageNumber} of {pages}
+              </span>
+
+              <button
+                type="button"
+                className="button ghost"
+                onClick={goToNextPage}
+                disabled={pageNumber >= pages || loading}
+                data-testid="products-next-page"
+              >
+                Next &gt;
+              </button>
+            </div>
+          ) : (
+            <div
+              ref={loadMoreRef}
+              className="infinite-scroll-sentinel"
+              data-testid="infinite-scroll-sentinel"
+            >
+              {loadingMore && <span>Loading more products...</span>}
+              {!loadingMore && hasMoreProducts && <span>Scroll to load more products</span>}
+              {!loadingMore && !hasMoreProducts && products.length > 0 && (
+                <span>All products loaded</span>
+              )}
+            </div>
+          )}
+        </>
+      )}
     </section>
   );
 };
