@@ -52,11 +52,57 @@ Add these:
 * File upload (profile picture)
 * Textarea (reviews/comments)
 
+---
+
+## Section 2 Implementation Notes — Advanced UI Interactions
+
+✅ Dynamic delayed element
+✅ Lazy-loaded product list
+✅ Infinite scroll sentinel
+✅ Hover to reveal hidden wishlist button
+✅ Hover tooltip
+✅ Drag product to cart
+✅ Price range slider
+✅ Press Enter to search
+✅ Tab-friendly labelled controls
+
+Status: ✅ Implemented
+
+Implemented inside the real ecommerce product catalogue instead of a standalone demo page.
+
+UI location:
+
+- Page: `/products`
+- Code files:
+  - `frontend/src/pages/Products.jsx`
+  - `frontend/src/components/ProductCard.jsx`
+  - `frontend/src/styles.css`
+- Test file:
+  - `frontend/tests/e2e/advanced-ui-interactions.spec.js`
+
+Features implemented:
+
+| Requirement                    | Status             | UI location                                                              | Code location                     | Suggested Playwright locator                                             |
+| ------------------------------ | ------------------ | ------------------------------------------------------------------------ | --------------------------------- | ------------------------------------------------------------------------ |
+| Dynamic element after delay    | Complete           | Delayed promo banner on Products page                                    | `Products.jsx`                    | `getByTestId('delayed-deal-banner')`                                     |
+| Lazy-loaded product list       | Complete           | Products page loads products in chunks                                   | `Products.jsx`                    | `getByTestId('loaded-product-count')`                                    |
+| Infinite scroll                | Complete           | Products page bottom sentinel loads more products                        | `Products.jsx`                    | `getByTestId('infinite-scroll-sentinel')`                                |
+| Hover to reveal hidden element | Complete           | Wishlist button and tooltip appear on product card hover                 | `ProductCard.jsx`                 | `getByTestId('wishlist-button')`, `getByTestId('product-hover-tooltip')` |
+| Hidden Add to wishlist button  | Complete           | Product card image overlay                                               | `ProductCard.jsx`                 | `getByTestId('wishlist-button')`                                         |
+| Drag & drop                    | Complete           | Drag product card to cart drop zone                                      | `Products.jsx`, `ProductCard.jsx` | `getByTestId('product-card')`, `getByTestId('cart-drop-zone')`           |
+| Slider                         | Complete           | Max price filter slider                                                  | `Products.jsx`                    | `getByTestId('price-range-slider')`                                      |
+| Keyboard action                | Complete           | Press Enter in product search field                                      | `Products.jsx`                    | `getByTestId('product-search-input').press('Enter')`                     |
+| Tab navigation through form    | Existing/Supported | Register, login, checkout and product filters use labelled form controls | Multiple form pages               | `page.keyboard.press('Tab')`                                             |
+
+Teaching value:
+
+- Students can practise waiting for dynamic content, hover states, hidden elements, drag-and-drop, range sliders, keyboard search, infinite-scroll behaviour, and robust `data-testid` locators in a realistic ecommerce catalogue flow.
+
 ### Buttons & Actions
 
-* Disabled → enabled buttons (e.g., after form validation)
-* Loading buttons (spinner after click)
-* Double-click / right-click actions
+- Disabled → enabled buttons (e.g., after form validation)
+- Loading buttons (spinner after click)
+- Double-click / right-click actions
 
 ---
 

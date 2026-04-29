@@ -1,0 +1,11 @@
+{
+  "name": "mern-ecommerce-local-runner",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "powershell -ExecutionPolicy Bypass -File .\\start-local.ps1",
+    "start:install": "powershell -ExecutionPolicy Bypass -File .\\start-local.ps1 -Install",
+    "start:seed": "powershell -ExecutionPolicy Bypass -File .\\start-local.ps1 -Seed",
+    "test:e2e": "cd frontend && npm run test:e2e"
+  }
+}

@@ -274,4 +274,269 @@ $env:E2E_MONGO_URI="mongodb://127.0.0.1:27017/my_custom_e2e_db"
 npm run test:e2e
 ```
 
-Test
+---
+
+Add this section to your `README.md`.
+
+````md
+## Starting the App Locally with One Script
+
+// Script to run to start the app locally, This command opens two powershell windows, do not close them, until you want to stop the application:
+powershell -ExecutionPolicy Bypass -File .\start-local.ps1
+
+This project includes a PowerShell startup script that starts the full local development environment for the MERN ecommerce app.
+
+The script can:
+
+- Check whether MongoDB is running
+- Start MongoDB if it is installed as a Windows service
+- Check backend and frontend `.env` files
+- Install dependencies when requested
+- Seed the database when requested
+- Start the backend server
+- Start the frontend server
+- Open the app in the browser
+
+---
+
+### Prerequisites
+
+Before using the script, make sure you have installed:
+
+- Node.js
+- npm
+- MongoDB Community Server
+- Git
+- VS Code
+
+MongoDB should be installed as a Windows service called:
+
+```txt
+MongoDB
+```
+````
+
+You can check this in PowerShell:
+
+```powershell
+Get-Service MongoDB
+```
+
+---
+
+### Project Location
+
+Open PowerShell and go to the project root:
+
+```powershell
+cd D:\Projects2\mern-ecommerce-draft-playwright-self-start\mern-ecommerce-draft
+```
+
+The project root should contain:
+
+```txt
+backend/
+frontend/
+README.md
+start-local.ps1
+```
+
+---
+
+### First-Time Setup
+
+If this is the first time running the project, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Install
+```
+
+This will install dependencies for both:
+
+```txt
+backend/
+frontend/
+```
+
+It will also start the backend and frontend servers.
+
+---
+
+### Normal Daily Startup
+
+After dependencies are already installed, start the app with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start-local.ps1
+```
+
+This will:
+
+1. Check MongoDB
+2. Start MongoDB if needed
+3. Start the backend server
+4. Start the frontend server
+5. Open the app in the browser
+
+---
+
+### Start the App and Seed the Database
+
+To reload the sample database data before starting the app, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Seed
+```
+
+Use this when you want to reset products, admin user, and sample data.
+
+Be careful: the seed script may clear and recreate existing local database data.
+
+---
+
+### Install Dependencies and Seed Database
+
+For a full fresh setup, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Install -Seed
+```
+
+This is useful when:
+
+- You cloned the project for the first time
+- You deleted `node_modules`
+- You want a clean database reset
+
+---
+
+### App URLs
+
+Once the script has started successfully, open:
+
+```txt
+http://localhost:5173
+```
+
+Backend health check:
+
+```txt
+http://localhost:5000/api/health
+```
+
+---
+
+### Admin Login
+
+Seeded admin account:
+
+```txt
+Email: admin@example.com
+Password: Admin123!
+```
+
+---
+
+### Stopping the App
+
+The script opens separate PowerShell windows for the backend and frontend.
+
+To stop the app:
+
+1. Go to the backend PowerShell window
+2. Press:
+
+```txt
+Ctrl + C
+```
+
+3. Go to the frontend PowerShell window
+4. Press:
+
+```txt
+Ctrl + C
+```
+
+---
+
+### Manual Startup Alternative
+
+If you do not want to use the script, you can still start the app manually.
+
+Start MongoDB:
+
+```powershell
+Get-Service MongoDB
+Start-Service MongoDB
+```
+
+Start backend:
+
+```powershell
+cd D:\Projects2\mern-ecommerce-draft-playwright-self-start\mern-ecommerce-draft\backend
+npm run dev
+```
+
+Start frontend in another terminal:
+
+```powershell
+cd D:\Projects2\mern-ecommerce-draft-playwright-self-start\mern-ecommerce-draft\frontend
+npm run dev
+```
+
+Then open:
+
+```txt
+http://localhost:5173
+```
+
+---
+
+### Troubleshooting
+
+#### MongoDB service not found
+
+If this command does not find MongoDB:
+
+```powershell
+Get-Service MongoDB
+```
+
+MongoDB may not be installed as a Windows service. Start MongoDB manually or reinstall MongoDB Community Server with the Windows service option enabled.
+
+#### Port already in use
+
+If backend or frontend does not start, check whether ports are already in use:
+
+```powershell
+netstat -ano | findstr :5000
+netstat -ano | findstr :5173
+```
+
+If a process is already listening on the port, stop that process or close the old terminal window.
+
+#### Dependencies missing
+
+Run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Install
+```
+
+#### Database needs resetting
+
+Run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Seed
+```
+
+````
+
+After adding it, commit and push:
+
+```powershell
+git add README.md start-local.ps1
+git commit -m "Add local startup script instructions"
+git push
+````
