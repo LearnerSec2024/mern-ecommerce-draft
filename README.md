@@ -1,21 +1,72 @@
-# MERN Ecommerce App - First Draft
+# MERN Ecommerce App with Playwright Automation
 
-This is a first-draft fullstack ecommerce app using MongoDB, Express, React and Node.js.
+This is a fullstack ecommerce learning project built with the MERN stack:
+
+- MongoDB
+- Express.js
+- React
+- Node.js
+
+The project also includes Playwright end-to-end tests and GitHub Actions so it can be used for learning and teaching browser automation with JavaScript.
+
+---
 
 ## Included Features
 
+### Ecommerce Features
+
 - User registration and login with JWT
 - Password hashing with bcrypt
-- Product listing, search, category filter and sorting
+- Product catalogue
+- Product search, category filter and sorting
 - Product details page
-- Authenticated cart API
+- Authenticated cart
 - Add, update, remove and clear cart items
 - Checkout with mock payment
 - Order creation and user order history
 - Admin product management
 - Admin order status management
-- Basic security middleware: Helmet, rate limiting, NoSQL sanitisation and HPP protection
-- Seed data including `Fruits & Vegetables` category using a safer category slug to avoid special-character issues
+- Seed data including `Fruits & Vegetables` category
+- Safer category slugs to avoid special-character issues
+
+### Security Features
+
+- JWT-based authentication
+- Password hashing with bcrypt
+- Protected user routes
+- Admin-only backend routes
+- Helmet security headers
+- Rate limiting
+- NoSQL sanitisation
+- HTTP parameter pollution protection
+- Environment-based configuration
+
+### Playwright Teaching Features
+
+This project is being extended to support realistic Playwright automation teaching inside a real ecommerce app.
+
+Current implemented areas include:
+
+- Checkboxes
+- Dropdowns
+- Links
+- Popups/modals
+- New tabs/windows
+- Iframes
+- Dynamic delayed elements
+- Keyboard search
+- Price range slider
+- Hover-revealed wishlist actions
+- Drag product to cart drop zone
+- Lazy/infinite scroll sentinel
+
+The implementation notes are tracked in:
+
+```txt
+playwrightRequirements.md
+```
+
+---
 
 ## Folder Structure
 
@@ -33,28 +84,209 @@ mern-ecommerce-draft/
 │   ├── package.json
 │   └── server.js
 ├── frontend/
+│   ├── scripts/
 │   ├── src/
 │   │   ├── api/
 │   │   ├── components/
 │   │   ├── context/
 │   │   └── pages/
+│   ├── tests/
+│   │   └── e2e/
 │   ├── .env.example
-│   └── package.json
-└── implementation_plan.md
+│   ├── package.json
+│   └── playwright.config.js
+├── .github/
+│   └── workflows/
+├── implementation_plan.md
+├── playwrightRequirements.md
+├── postman_collection.json
+├── README.md
+├── start-local.ps1
+└── package.json
 ```
+
+---
 
 ## Prerequisites
 
+Before running the project, install:
+
 - Node.js
-- MongoDB local instance or MongoDB Atlas connection string
 - npm
+- MongoDB Community Server
+- Git
+- VS Code
 
-## Backend Setup
+MongoDB should be installed as a Windows service called:
 
-```bash
+```txt
+MongoDB
+```
+
+You can check MongoDB with:
+
+```powershell
+Get-Service MongoDB
+```
+
+---
+
+## Quick Start
+
+From the project root, run:
+
+```powershell
+npm start
+```
+
+This starts the full local development environment.
+
+The startup script will:
+
+1. Check whether MongoDB is running
+2. Start MongoDB if it is installed as a Windows service
+3. Check backend and frontend `.env` files
+4. Check whether dependencies are installed
+5. Check whether product seed data exists
+6. Seed the database only if products are missing
+7. Start the backend server
+8. Start the frontend server
+9. Open the app in the browser
+
+The app opens at:
+
+```txt
+http://localhost:5173
+```
+
+Backend health check:
+
+```txt
+http://localhost:5000/api/health
+```
+
+---
+
+## One-Command Local Startup
+
+The root-level `package.json` calls the PowerShell startup script.
+
+### Normal Daily Startup
+
+```powershell
+npm start
+```
+
+Use this for normal local development.
+
+### First-Time Setup
+
+If this is your first time running the project, or if `node_modules` is missing, run:
+
+```powershell
+npm run start:install
+```
+
+This installs dependencies for both:
+
+```txt
+backend/
+frontend/
+```
+
+Then it starts the app.
+
+### Force Seed the Database
+
+To reset and reload sample data:
+
+```powershell
+npm run start:seed
+```
+
+Be careful: the seed script may clear and recreate existing local data.
+
+### Full Fresh Setup
+
+To install dependencies and force seed the database:
+
+```powershell
+npm run start:install -- -Seed
+```
+
+Alternatively, run the PowerShell script directly:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Install -Seed
+```
+
+---
+
+## What the Startup Script Does
+
+The startup script is:
+
+```txt
+start-local.ps1
+```
+
+It is useful because the app has three moving parts:
+
+```txt
+MongoDB database
+Express backend
+React frontend
+```
+
+Instead of manually starting each one, the script handles the startup flow.
+
+It opens two PowerShell windows:
+
+```txt
+Backend server  -> http://localhost:5000
+Frontend server -> http://localhost:5173
+```
+
+Keep both windows open while using the app.
+
+To stop the app, press:
+
+```txt
+Ctrl + C
+```
+
+in both the backend and frontend PowerShell windows.
+
+---
+
+## Seeded Admin Login
+
+After seeding the database, you can log in with:
+
+```txt
+Email: admin@example.com
+Password: Admin123!
+```
+
+---
+
+## Manual Startup Alternative
+
+If you do not want to use the startup script, you can still run the app manually.
+
+### Start MongoDB
+
+```powershell
+Get-Service MongoDB
+Start-Service MongoDB
+```
+
+### Start Backend
+
+```powershell
 cd backend
 npm install
-cp .env.example .env
+copy .env.example .env
 npm run seed
 npm run dev
 ```
@@ -65,27 +297,14 @@ Backend runs on:
 http://localhost:5000
 ```
 
-Health check:
-
-```txt
-http://localhost:5000/api/health
-```
-
-Seeded admin login:
-
-```txt
-admin@example.com
-Admin123!
-```
-
-## Frontend Setup
+### Start Frontend
 
 Open a second terminal:
 
-```bash
+```powershell
 cd frontend
 npm install
-cp .env.example .env
+copy .env.example .env
 npm run dev
 ```
 
@@ -94,6 +313,8 @@ Frontend runs on:
 ```txt
 http://localhost:5173
 ```
+
+---
 
 ## API Summary
 
@@ -135,366 +356,242 @@ http://localhost:5173
 | GET    | `/api/orders`            | Admin list all orders             |
 | PUT    | `/api/orders/:id/status` | Admin update order/payment status |
 
-## First Draft Limitations
+---
 
-- Payment is mocked, not integrated with Stripe or another payment provider.
-- No image upload yet; products use image URLs.
-- No product reviews yet.
-- No forgot-password or email verification yet.
-- Cart is server-side only and requires login.
-- Admin dashboard is functional but basic.
+## Playwright E2E Tests
 
-## Recommended Next Iteration
+This project includes Playwright end-to-end tests for the main ecommerce flow and automation teaching features.
 
-1. Add request validation using Zod or Joi.
-2. Add stronger frontend form validation.
-3. Add product image upload using Cloudinary or S3.
-4. Add Stripe checkout.
-5. Add tests for auth, cart and order APIs.
-6. Add refresh-token or httpOnly cookie auth if required.
-7. Add pagination UI.
-8. Add better admin dashboard metrics.
-
-## Playwright E2E Test
-
-This project now includes a Playwright end-to-end test for the main customer journey:
-
-1. Access the home page at `http://localhost:5173/`
-2. Create a new customer account with a unique email address
-3. Log out and log back in using the newly created account
-4. Open the product catalogue
-5. Add a product to the cart
-6. Complete checkout with mock payment
-7. Verify the submitted order appears in `My orders`
-
-### Test files added
+### Test Files
 
 ```txt
-frontend/playwright.config.js
 frontend/tests/e2e/create-account-login-order.spec.js
+frontend/tests/e2e/advanced-ui-interactions.spec.js
 ```
 
-### How to run the test
+### Main Customer Journey Test
 
-Keep MongoDB running, then start the backend in one terminal:
+The customer journey test covers:
 
-```bash
+1. Access home page
+2. Create a new customer account
+3. Log in with the new account
+4. Open product catalogue
+5. Add product to cart
+6. Complete checkout with mock payment
+7. Verify submitted order appears in My Orders
+
+### Advanced UI Interactions Test
+
+The advanced UI interaction test covers:
+
+1. Dynamic delayed promo banner
+2. Product search using Enter key
+3. Price range slider
+4. Hover-revealed wishlist button
+5. Hover tooltip
+6. Drag product card to cart drop zone
+7. Infinite/lazy scroll sentinel
+
+---
+
+## Running Playwright Tests Locally
+
+Go to the frontend folder:
+
+```powershell
+cd frontend
+```
+
+Install Playwright browsers once:
+
+```powershell
+npx playwright install
+```
+
+Run all E2E tests:
+
+```powershell
+npm run test:e2e
+```
+
+Or run directly:
+
+```powershell
+npx playwright test
+```
+
+Run one test file:
+
+```powershell
+npx playwright test tests/e2e/advanced-ui-interactions.spec.js
+```
+
+Run in headed mode:
+
+```powershell
+npx playwright test --headed
+```
+
+Run in debug mode:
+
+```powershell
+npx playwright test --headed --debug
+```
+
+Open the Playwright report:
+
+```powershell
+npx playwright show-report
+```
+
+---
+
+## Playwright Local Server Behaviour
+
+The Playwright setup is configured to make local development easier.
+
+When running locally:
+
+- If the app is already running, Playwright reuses the existing backend and frontend.
+- If the app is not running, Playwright can start the backend and frontend automatically.
+
+When running in GitHub Actions:
+
+- Playwright starts a clean controlled test environment.
+- MongoDB runs as a temporary GitHub Actions service.
+- Test data is created in an isolated E2E database.
+- The test database is destroyed when the GitHub Actions runner finishes.
+
+This keeps GitHub CI clean while allowing faster local development.
+
+---
+
+## Recommended Local Workflow
+
+For day-to-day work:
+
+```txt
+1. Run npm start from the project root
+2. Make changes in VS Code
+3. Visually inspect the app in the browser
+4. Run Playwright tests from the frontend folder
+5. Commit changes in GitHub Desktop
+6. Push to GitHub
+7. Confirm GitHub Actions passes
+```
+
+Example:
+
+```powershell
+npm start
+```
+
+Then in another terminal:
+
+```powershell
+cd frontend
+npx playwright test
+```
+
+---
+
+## GitHub Actions
+
+This project includes a GitHub Actions workflow for Playwright tests.
+
+The workflow runs automatically on:
+
+```txt
+push to main
+pull request to main
+```
+
+GitHub Actions will:
+
+1. Check out the repository
+2. Install backend dependencies
+3. Install frontend dependencies
+4. Start MongoDB as a service
+5. Install Playwright browsers
+6. Run Playwright tests
+7. Upload the Playwright report as an artifact
+
+The workflow file is located at:
+
+```txt
+.github/workflows/playwright.yml
+```
+
+---
+
+## Environment Files
+
+The real `.env` files are not committed to GitHub.
+
+The repository includes example files only:
+
+```txt
+backend/.env.example
+frontend/.env.example
+```
+
+This is intentional.
+
+Do not commit:
+
+```txt
+backend/.env
+frontend/.env
+```
+
+---
+
+## Database Notes
+
+This app uses MongoDB.
+
+MongoDB stores data in collections, similar to tables in SQL databases.
+
+Important collections include:
+
+```txt
+users
+products
+carts
+orders
+```
+
+The frontend does not create products by itself. Products are loaded from MongoDB through the backend API.
+
+The seed script inserts sample products into MongoDB so the catalogue has products to display.
+
+Seed script:
+
+```txt
+backend/seed/productSeeder.js
+```
+
+Run seed manually:
+
+```powershell
 cd backend
-npm run dev
+npm run seed
 ```
 
-Start the frontend in a second terminal:
-
-```bash
-cd frontend
-npm run dev
-```
-
-In a third terminal, install Playwright browsers once:
-
-```bash
-cd frontend
-npx playwright install
-```
-
-Then run the E2E test:
-
-```bash
-npm run test:e2e
-```
-
-For a visible browser run:
-
-```bash
-npm run test:e2e:headed
-```
-
-For Playwright's interactive UI:
-
-```bash
-npm run test:e2e:ui
-```
-
-If your frontend is running on a different URL, override it like this:
-
-```bash
-PLAYWRIGHT_BASE_URL=http://localhost:5173 npm run test:e2e
-```
-
-On Windows PowerShell:
+Or use the startup script:
 
 ```powershell
-$env:PLAYWRIGHT_BASE_URL="http://localhost:5173"; npm run test:e2e
+npm start
 ```
 
-## Self-starting Playwright E2E test
-
-The frontend Playwright config now starts the required local services for you:
-
-- checks MongoDB on `127.0.0.1:27017`
-- on Windows, attempts to start the `MongoDB` Windows service if it is stopped
-- seeds an isolated E2E database named `mern_ecommerce_e2e`
-- starts the backend API on `http://127.0.0.1:5000`
-- starts the Vite frontend on `http://127.0.0.1:5173`
-- runs the browser flow: home page → create account → logout → login → add product to cart → checkout → submit order → verify My Orders
-
-Run from the frontend folder:
-
-```powershell
-cd frontend
-npm install
-npx playwright install
-npm run test:e2e
-```
-
-For visible browser mode:
-
-```powershell
-npm run test:e2e:headed
-```
-
-For debugging:
-
-```powershell
-npm run test:e2e:debug
-```
-
-Important: close any manually running backend or frontend terminals before running the E2E test, because Playwright now starts its own controlled servers on ports `5000` and `5173`.
-
-By default, the E2E test uses this database connection:
-
-```txt
-mongodb://127.0.0.1:27017/mern_ecommerce_e2e
-```
-
-To override it temporarily in PowerShell:
-
-```powershell
-$env:E2E_MONGO_URI="mongodb://127.0.0.1:27017/my_custom_e2e_db"
-npm run test:e2e
-```
+The startup script will seed automatically if no products are found.
 
 ---
 
-Add this section to your `README.md`.
+## Troubleshooting
 
-````md
-## Starting the App Locally with One Script
-
-// Script to run to start the app locally, This command opens two powershell windows, do not close them, until you want to stop the application:
-powershell -ExecutionPolicy Bypass -File .\start-local.ps1
-
-This project includes a PowerShell startup script that starts the full local development environment for the MERN ecommerce app.
-
-The script can:
-
-- Check whether MongoDB is running
-- Start MongoDB if it is installed as a Windows service
-- Check backend and frontend `.env` files
-- Install dependencies when requested
-- Seed the database when requested
-- Start the backend server
-- Start the frontend server
-- Open the app in the browser
-
----
-
-### Prerequisites
-
-Before using the script, make sure you have installed:
-
-- Node.js
-- npm
-- MongoDB Community Server
-- Git
-- VS Code
-
-MongoDB should be installed as a Windows service called:
-
-```txt
-MongoDB
-```
-````
-
-You can check this in PowerShell:
-
-```powershell
-Get-Service MongoDB
-```
-
----
-
-### Project Location
-
-Open PowerShell and go to the project root:
-
-```powershell
-cd D:\Projects2\mern-ecommerce-draft-playwright-self-start\mern-ecommerce-draft
-```
-
-The project root should contain:
-
-```txt
-backend/
-frontend/
-README.md
-start-local.ps1
-```
-
----
-
-### First-Time Setup
-
-If this is the first time running the project, run:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Install
-```
-
-This will install dependencies for both:
-
-```txt
-backend/
-frontend/
-```
-
-It will also start the backend and frontend servers.
-
----
-
-### Normal Daily Startup
-
-After dependencies are already installed, start the app with:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\start-local.ps1
-```
-
-This will:
-
-1. Check MongoDB
-2. Start MongoDB if needed
-3. Start the backend server
-4. Start the frontend server
-5. Open the app in the browser
-
----
-
-### Start the App and Seed the Database
-
-To reload the sample database data before starting the app, run:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Seed
-```
-
-Use this when you want to reset products, admin user, and sample data.
-
-Be careful: the seed script may clear and recreate existing local database data.
-
----
-
-### Install Dependencies and Seed Database
-
-For a full fresh setup, run:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Install -Seed
-```
-
-This is useful when:
-
-- You cloned the project for the first time
-- You deleted `node_modules`
-- You want a clean database reset
-
----
-
-### App URLs
-
-Once the script has started successfully, open:
-
-```txt
-http://localhost:5173
-```
-
-Backend health check:
-
-```txt
-http://localhost:5000/api/health
-```
-
----
-
-### Admin Login
-
-Seeded admin account:
-
-```txt
-Email: admin@example.com
-Password: Admin123!
-```
-
----
-
-### Stopping the App
-
-The script opens separate PowerShell windows for the backend and frontend.
-
-To stop the app:
-
-1. Go to the backend PowerShell window
-2. Press:
-
-```txt
-Ctrl + C
-```
-
-3. Go to the frontend PowerShell window
-4. Press:
-
-```txt
-Ctrl + C
-```
-
----
-
-### Manual Startup Alternative
-
-If you do not want to use the script, you can still start the app manually.
-
-Start MongoDB:
-
-```powershell
-Get-Service MongoDB
-Start-Service MongoDB
-```
-
-Start backend:
-
-```powershell
-cd D:\Projects2\mern-ecommerce-draft-playwright-self-start\mern-ecommerce-draft\backend
-npm run dev
-```
-
-Start frontend in another terminal:
-
-```powershell
-cd D:\Projects2\mern-ecommerce-draft-playwright-self-start\mern-ecommerce-draft\frontend
-npm run dev
-```
-
-Then open:
-
-```txt
-http://localhost:5173
-```
-
----
-
-### Troubleshooting
-
-#### MongoDB service not found
+### MongoDB service not found
 
 If this command does not find MongoDB:
 
@@ -502,41 +599,104 @@ If this command does not find MongoDB:
 Get-Service MongoDB
 ```
 
-MongoDB may not be installed as a Windows service. Start MongoDB manually or reinstall MongoDB Community Server with the Windows service option enabled.
+MongoDB may not be installed as a Windows service.
 
-#### Port already in use
+Start MongoDB manually or reinstall MongoDB Community Server with the Windows service option enabled.
 
-If backend or frontend does not start, check whether ports are already in use:
+### Products are not showing
+
+Products are loaded from MongoDB.
+
+If the product catalogue is empty, run:
+
+```powershell
+npm run start:seed
+```
+
+Or:
+
+```powershell
+cd backend
+npm run seed
+```
+
+### Port already in use
+
+Check whether backend or frontend ports are already in use:
 
 ```powershell
 netstat -ano | findstr :5000
 netstat -ano | findstr :5173
 ```
 
-If a process is already listening on the port, stop that process or close the old terminal window.
+Only active servers show as:
 
-#### Dependencies missing
+```txt
+LISTENING
+```
+
+If needed, stop the old terminal or kill the process by PID:
+
+```powershell
+taskkill /PID <PID_NUMBER> /F
+```
+
+### Playwright test is using the wrong URL
+
+Use `localhost` consistently for local development:
+
+```txt
+http://localhost:5173
+http://localhost:5000
+```
+
+Avoid mixing these unless you know why:
+
+```txt
+localhost
+127.0.0.1
+```
+
+Browsers treat them as different origins.
+
+### Dependencies missing
 
 Run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Install
+npm run start:install
 ```
 
-#### Database needs resetting
+### Database needs resetting
 
 Run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\start-local.ps1 -Seed
+npm run start:seed
 ```
 
-````
+---
 
-After adding it, commit and push:
+## Current Limitations
 
-```powershell
-git add README.md start-local.ps1
-git commit -m "Add local startup script instructions"
-git push
-````
+- Payment is mocked, not integrated with Stripe or another payment provider.
+- Product images currently use URLs or placeholders.
+- Product reviews are not yet implemented.
+- Forgot-password and email verification are not yet implemented.
+- Admin dashboard is functional but basic.
+- Some automation-teaching features are still being added section by section.
+
+---
+
+## Recommended Next Iterations
+
+1. Continue implementing `playwrightRequirements.md` section by section.
+2. Add stronger frontend form validation.
+3. Add product image upload using Cloudinary or S3.
+4. Add Stripe checkout or a richer mock payment flow.
+5. Add more API-level tests.
+6. Add pagination UI polish.
+7. Add better admin dashboard metrics.
+8. Add accessibility checks with Playwright.
+9. Add visual regression examples.
+10. Add beginner-friendly Playwright learning notes.
