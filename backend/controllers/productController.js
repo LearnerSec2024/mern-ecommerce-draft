@@ -18,7 +18,7 @@ const getProducts = async (req, res, next) => {
       newest: { createdAt: -1 },
       price_asc: { price: 1 },
       price_desc: { price: -1 },
-      name_asc: { name: 1 },
+      name_asc: { name: 1 }
     };
 
     const [products, total, categories] = await Promise.all([
@@ -27,7 +27,7 @@ const getProducts = async (req, res, next) => {
         .skip(skip)
         .limit(limit),
       Product.countDocuments(query),
-      Product.distinct('category', { isActive: true }),
+      Product.distinct('category', { isActive: true })
     ]);
 
     res.json({
@@ -35,7 +35,7 @@ const getProducts = async (req, res, next) => {
       categories,
       page,
       pages: Math.ceil(total / limit),
-      total,
+      total
     });
   } catch (error) {
     next(error);
@@ -113,10 +113,17 @@ const generateProductImage = async (req, res, next) => {
 
     res.json({
       image,
-      message: 'Product image downloaded successfully',
+      message: 'Product image downloaded successfully'
     });
   } catch (error) {
     next(error);
   }
 };
-export { getProducts, getProductById, createProduct, updateProduct, deleteProduct, generateProductImage };
+export {
+  getProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  generateProductImage
+};

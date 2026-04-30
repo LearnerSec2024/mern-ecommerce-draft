@@ -7,6 +7,10 @@
     "start:install": "powershell -ExecutionPolicy Bypass -File .\\start-local.ps1 -Install",
     "start:seed": "powershell -ExecutionPolicy Bypass -File .\\start-local.ps1 -Seed",
     "test:e2e": "cd frontend && npm run test:e2e",
-    "images:download": "cd backend && node scripts/download-product-images.mjs"
+    "images:download": "cd backend && node scripts/download-product-images.mjs",
+    "format": "prettier --write \"frontend/src/**/*.{js,jsx,css}\" \"frontend/tests/**/*.{js,jsx}\" \"backend/**/*.{js,mjs}\" \"*.md\""
+  },
+  "devDependencies": {
+    "prettier": "^3.8.3"
   }
 }

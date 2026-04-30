@@ -58,7 +58,9 @@ const Checkout = () => {
       <div className="card empty-state">
         <h1>Checkout</h1>
         <p>Your cart is empty.</p>
-        <Link className="button" to="/products">Browse products</Link>
+        <Link className="button" to="/products">
+          Browse products
+        </Link>
       </div>
     );
   }
@@ -69,26 +71,74 @@ const Checkout = () => {
       <div className="cart-layout">
         <form className="card stack" onSubmit={handleSubmit}>
           <h2>Shipping details</h2>
-          <label>Address line 1<input value={form.line1} onChange={(e) => setForm({ ...form, line1: e.target.value })} required /></label>
-          <label>Address line 2<input value={form.line2} onChange={(e) => setForm({ ...form, line2: e.target.value })} /></label>
-          <label>City<input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required /></label>
-          <label>State<input value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} required /></label>
-          <label>Postcode<input value={form.postcode} onChange={(e) => setForm({ ...form, postcode: e.target.value })} required /></label>
-          <label>Country<input value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} required /></label>
+          <label>
+            Address line 1
+            <input
+              value={form.line1}
+              onChange={(e) => setForm({ ...form, line1: e.target.value })}
+              required
+            />
+          </label>
+          <label>
+            Address line 2
+            <input
+              value={form.line2}
+              onChange={(e) => setForm({ ...form, line2: e.target.value })}
+            />
+          </label>
+          <label>
+            City
+            <input
+              value={form.city}
+              onChange={(e) => setForm({ ...form, city: e.target.value })}
+              required
+            />
+          </label>
+          <label>
+            State
+            <input
+              value={form.state}
+              onChange={(e) => setForm({ ...form, state: e.target.value })}
+              required
+            />
+          </label>
+          <label>
+            Postcode
+            <input
+              value={form.postcode}
+              onChange={(e) => setForm({ ...form, postcode: e.target.value })}
+              required
+            />
+          </label>
+          <label>
+            Country
+            <input
+              value={form.country}
+              onChange={(e) => setForm({ ...form, country: e.target.value })}
+              required
+            />
+          </label>
           <label>
             Payment method
-            <select value={form.paymentMethod} onChange={(e) => setForm({ ...form, paymentMethod: e.target.value })}>
+            <select
+              value={form.paymentMethod}
+              onChange={(e) => setForm({ ...form, paymentMethod: e.target.value })}
+            >
               <option value="mock-card">Mock card payment</option>
               <option value="cash-on-delivery">Cash on delivery</option>
             </select>
           </label>
-          <button className="button" disabled={placing}>{placing ? 'Placing order...' : 'Place order'}</button>
+          <button className="button" disabled={placing}>
+            {placing ? 'Placing order...' : 'Place order'}
+          </button>
           {error && <p className="error">{error}</p>}
         </form>
         <aside className="card summary">
           <h2>Order summary</h2>
           {cart.items.map((item) => (
-            <p key={item.product}>{item.name} × {item.quantity}</p>
+            <p key={item.product}>
+              {item.name} × {item.quantity}
+            </p>
           ))}
           <hr />
           <p>Subtotal: ${subtotal.toFixed(2)}</p>

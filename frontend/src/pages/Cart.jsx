@@ -21,13 +21,17 @@ const Cart = () => {
 
   return (
     <section>
-      <div className="page-header"><h1>Your cart</h1></div>
+      <div className="page-header">
+        <h1>Your cart</h1>
+      </div>
       {loading && <p>Loading cart...</p>}
       {error && <p className="error">{error}</p>}
       {!cart.items?.length ? (
         <div className="card empty-state">
           <p>Your cart is empty.</p>
-          <Link className="button" to="/products">Browse products</Link>
+          <Link className="button" to="/products">
+            Browse products
+          </Link>
         </div>
       ) : (
         <div className="cart-layout">
@@ -45,14 +49,20 @@ const Cart = () => {
                   value={item.quantity}
                   onChange={(event) => handleQuantity(item.product, Number(event.target.value))}
                 />
-                <button className="button ghost" onClick={() => removeItem(item.product)}>Remove</button>
+                <button className="button ghost" onClick={() => removeItem(item.product)}>
+                  Remove
+                </button>
               </article>
             ))}
           </div>
           <aside className="card summary">
             <h2>Summary</h2>
-            <p>Subtotal: <strong>${cart.totalAmount.toFixed(2)}</strong></p>
-            <Link className="button full" to="/checkout">Checkout</Link>
+            <p>
+              Subtotal: <strong>${cart.totalAmount.toFixed(2)}</strong>
+            </p>
+            <Link className="button full" to="/checkout">
+              Checkout
+            </Link>
           </aside>
         </div>
       )}

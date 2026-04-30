@@ -89,7 +89,9 @@ const updateCartItem = async (req, res, next) => {
     }
 
     const cart = await getOrCreateCart(req.user._id);
-    const item = cart.items.find((cartItem) => cartItem.product.toString() === req.params.productId);
+    const item = cart.items.find(
+      (cartItem) => cartItem.product.toString() === req.params.productId
+    );
 
     if (!item) {
       res.status(404);

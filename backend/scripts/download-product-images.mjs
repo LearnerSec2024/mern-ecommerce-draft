@@ -42,7 +42,7 @@ const categorySearchHints = {
   'Beauty & Personal Care': 'beauty skincare product',
   'Sports & Outdoors': 'sports outdoor gear product',
   'Books & Stationery': 'stationery desk product',
-  'Toys & Games': 'toy game product',
+  'Toys & Games': 'toy game product'
 };
 
 const wait = (ms) => new Promise((resolveWait) => setTimeout(resolveWait, ms));
@@ -56,8 +56,8 @@ const searchPexels = async (query) => {
 
   const response = await fetch(url, {
     headers: {
-      Authorization: PEXELS_API_KEY,
-    },
+      Authorization: PEXELS_API_KEY
+    }
   });
 
   if (!response.ok) {

@@ -56,11 +56,14 @@ const ProductCard = ({ product, wishlisted = false, onWishlistToggle }) => {
 
   return (
     <article
+      id={`product-${product._id}`}
       className="card product-card interactive-product-card"
       draggable
       onDragStart={handleDragStart}
       data-testid="product-card"
       data-product-id={product._id}
+      data-category={product.category}
+      data-price={product.price}
     >
       <div className="product-image-wrap">
         <Link
@@ -102,7 +105,7 @@ const ProductCard = ({ product, wishlisted = false, onWishlistToggle }) => {
 
       <div className="card-body">
         <p className="eyebrow">{product.category}</p>
-        <h3>{product.name}</h3>
+        <h3 data-testid="product-card-title">{product.name}</h3>
         <p className="muted">{product.brand}</p>
         <strong>${product.price.toFixed(2)}</strong>
 

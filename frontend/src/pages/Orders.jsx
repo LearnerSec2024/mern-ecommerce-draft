@@ -64,7 +64,13 @@ const Orders = () => {
           const isExpanded = expandedOrderId === order._id;
 
           return (
-            <article className="card order-card" key={order._id} data-testid="order-card">
+            <article
+              id={`order-${order._id}`}
+              className="card order-card"
+              key={order._id}
+              data-testid="order-card"
+              data-order-id={order._id}
+            >
               <div className="order-summary-header">
                 <div>
                   <p className="eyebrow">Order</p>
@@ -74,8 +80,13 @@ const Orders = () => {
 
                 <div className="order-summary-meta">
                   <strong>{formatCurrency(order.totalPrice)}</strong>
-                  <span className="status ok">{formatStatus(order.orderStatus)}</span>
-                  <span className="status">{formatStatus(order.paymentStatus)}</span>
+                  <span className="status ok" data-testid="order-status-badge">
+                    {formatStatus(order.orderStatus)}
+                  </span>
+
+                  <span className="status" data-testid="payment-status-badge">
+                    {formatStatus(order.paymentStatus)}
+                  </span>
                 </div>
               </div>
 

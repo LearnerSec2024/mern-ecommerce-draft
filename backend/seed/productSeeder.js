@@ -11,50 +11,50 @@ const categoryColours = {
   'Fruits & Vegetables': {
     bg: '#D1FAE5',
     accent: '#10B981',
-    emoji: '🥭',
+    emoji: '🥭'
   },
   Electronics: {
     bg: '#DBEAFE',
     accent: '#2563EB',
-    emoji: '🎧',
+    emoji: '🎧'
   },
   Clothing: {
     bg: '#FCE7F3',
     accent: '#DB2777',
-    emoji: '👟',
+    emoji: '👟'
   },
   'Home & Kitchen': {
     bg: '#FEF3C7',
     accent: '#D97706',
-    emoji: '🏠',
+    emoji: '🏠'
   },
   'Beauty & Personal Care': {
     bg: '#F3E8FF',
     accent: '#9333EA',
-    emoji: '✨',
+    emoji: '✨'
   },
   'Sports & Outdoors': {
     bg: '#DCFCE7',
     accent: '#16A34A',
-    emoji: '🏕️',
+    emoji: '🏕️'
   },
   'Books & Stationery': {
     bg: '#E0E7FF',
     accent: '#4F46E5',
-    emoji: '📚',
+    emoji: '📚'
   },
   'Toys & Games': {
     bg: '#FFE4E6',
     accent: '#E11D48',
-    emoji: '🧩',
-  },
+    emoji: '🧩'
+  }
 };
 
 const imageFor = (name, category) => {
   const colours = categoryColours[category] || {
     bg: '#E5E7EB',
     accent: '#374151',
-    emoji: '🛒',
+    emoji: '🛒'
   };
 
   const safeName = name.replace(/&/g, 'and').replace(/</g, '').replace(/>/g, '');
@@ -93,8 +93,8 @@ const catalogue = {
       ['Lettuce Head', 3.49, 58],
       ['Orange Net Bag', 6.25, 43],
       ['Potato Bag', 5.99, 62],
-      ['Strawberry Punnet', 8.49, 29],
-    ],
+      ['Strawberry Punnet', 8.49, 29]
+    ]
   },
   Electronics: {
     brand: 'TechNova',
@@ -114,8 +114,8 @@ const catalogue = {
       ['Tablet Sleeve', 21.99, 49],
       ['Gaming Mouse Pad', 18.99, 67],
       ['Phone Tripod', 27.99, 42],
-      ['Mini Projector', 249.99, 11],
-    ],
+      ['Mini Projector', 249.99, 11]
+    ]
   },
   Clothing: {
     brand: 'Urban Basics',
@@ -135,8 +135,8 @@ const catalogue = {
       ['Summer Dress', 74.99, 24],
       ['Workout Tee', 29.99, 57],
       ['Wool Scarf', 27.99, 46],
-      ['Everyday Belt', 22.99, 63],
-    ],
+      ['Everyday Belt', 22.99, 63]
+    ]
   },
   'Home & Kitchen': {
     brand: 'Casa',
@@ -156,8 +156,8 @@ const catalogue = {
       ['Spice Jar Rack', 28.99, 27],
       ['Table Runner', 23.99, 45],
       ['Laundry Basket', 31.99, 34],
-      ['Wall Clock', 42.99, 21],
-    ],
+      ['Wall Clock', 42.99, 21]
+    ]
   },
   'Beauty & Personal Care': {
     brand: 'GlowCo',
@@ -177,8 +177,8 @@ const catalogue = {
       ['Travel Toiletry Bag', 19.99, 36],
       ['Cuticle Oil', 7.99, 79],
       ['SPF Day Cream', 24.99, 42],
-      ['Bath Soak', 13.49, 55],
-    ],
+      ['Bath Soak', 13.49, 55]
+    ]
   },
   'Sports & Outdoors': {
     brand: 'ActivePro',
@@ -198,8 +198,8 @@ const catalogue = {
       ['Bike Bottle Holder', 11.99, 61],
       ['Ankle Weights', 26.99, 33],
       ['Mini First Aid Kit', 18.49, 47],
-      ['Waterproof Dry Bag', 32.99, 28],
-    ],
+      ['Waterproof Dry Bag', 32.99, 28]
+    ]
   },
   'Books & Stationery': {
     brand: 'PaperTrail',
@@ -219,8 +219,8 @@ const catalogue = {
       ['Desk Calendar', 15.99, 38],
       ['Binder Clips Tin', 5.99, 87],
       ['Journal Notebook', 21.99, 32],
-      ['Marker Pack', 10.49, 69],
-    ],
+      ['Marker Pack', 10.49, 69]
+    ]
   },
   'Toys & Games': {
     brand: 'PlayBox',
@@ -240,9 +240,9 @@ const catalogue = {
       ['Bubble Wand Pack', 7.99, 74],
       ['Mini Soccer Ball', 14.99, 48],
       ['Craft Bead Kit', 18.99, 36],
-      ['Dinosaur Figure Set', 22.99, 33],
-    ],
-  },
+      ['Dinosaur Figure Set', 22.99, 33]
+    ]
+  }
 };
 
 const products = Object.entries(catalogue).flatMap(([category, details]) =>
@@ -255,8 +255,8 @@ const products = Object.entries(catalogue).flatMap(([category, details]) =>
     image: imageFor(name, category),
     stock,
     rating: Number((4.1 + (index % 8) * 0.1).toFixed(1)),
-    numReviews: 10 + index * 4,
-  })),
+    numReviews: 10 + index * 4
+  }))
 );
 
 const seed = async () => {
@@ -276,7 +276,7 @@ const seed = async () => {
         name: 'Admin User',
         email: 'admin@example.com',
         password: 'Admin123!',
-        role: 'admin',
+        role: 'admin'
       });
     } else if (existingAdmin.role !== 'admin') {
       existingAdmin.role = 'admin';

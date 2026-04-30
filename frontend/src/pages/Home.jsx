@@ -126,7 +126,9 @@ const Home = () => {
         <article className="home-feature-card">
           <span>🎯</span>
           <h3>Automation friendly</h3>
-          <p>Real UI patterns for Playwright: dropdowns, popups, iframes, hover and drag actions.</p>
+          <p>
+            Real UI patterns for Playwright: dropdowns, popups, iframes, hover and drag actions.
+          </p>
         </article>
 
         <article className="home-feature-card">

@@ -34,10 +34,7 @@ const cartSchema = new mongoose.Schema(
 );
 
 cartSchema.methods.recalculateTotal = function recalculateTotal() {
-  this.totalAmount = this.items.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  this.totalAmount = this.items.reduce((total, item) => total + item.price * item.quantity, 0);
 };
 
 const Cart = mongoose.model('Cart', cartSchema);

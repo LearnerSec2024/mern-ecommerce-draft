@@ -3,12 +3,15 @@ import { expect, test } from '@playwright/test';
 const API_BASE_URL = `${process.env.PLAYWRIGHT_BACKEND_URL || 'http://127.0.0.1:5000'}/api`;
 
 test.describe('Customer ecommerce journey', () => {
-  test('starts the app, creates an account, logs in, creates an order and submits it', async ({ page, request }) => {
+  test('starts the app, creates an account, logs in, creates an order and submits it', async ({
+    page,
+    request
+  }) => {
     const uniqueId = Date.now();
     const customer = {
       name: `Playwright Customer ${uniqueId}`,
       email: `playwright.customer.${uniqueId}@example.com`,
-      password: 'TestPassword123!',
+      password: 'TestPassword123!'
     };
 
     await test.step('Assert backend API and seeded catalogue are ready', async () => {
@@ -19,8 +22,14 @@ test.describe('Customer ecommerce journey', () => {
       const products = await request.get(`${API_BASE_URL}/products`);
       await expect(products, 'Products endpoint should return seeded catalogue').toBeOK();
       const productBody = await products.json();
-      expect(productBody.products.length, 'Seeded catalogue should have at least one product').toBeGreaterThan(0);
-      expect(productBody.categories.length, 'Seeded catalogue should expose categories').toBeGreaterThan(0);
+      expect(
+        productBody.products.length,
+        'Seeded catalogue should have at least one product'
+      ).toBeGreaterThan(0);
+      expect(
+        productBody.categories.length,
+        'Seeded catalogue should expose categories'
+      ).toBeGreaterThan(0);
     });
 
     await test.step('Access the home page', async () => {
@@ -48,7 +57,9 @@ test.describe('Customer ecommerce journey', () => {
 
       await expect(page).toHaveURL(/\/products$/);
       await expect(page.getByRole('heading', { name: /^products$/i })).toBeVisible();
-      await expect(page.getByRole('button', { name: new RegExp(`logout ${customer.name}`, 'i') })).toBeVisible();
+      await expect(
+        page.getByRole('button', { name: new RegExp(`logout ${customer.name}`, 'i') })
+      ).toBeVisible();
     });
 
     await test.step('Logout so the new account login can be validated', async () => {
@@ -68,7 +79,9 @@ test.describe('Customer ecommerce journey', () => {
 
       await expect(page).toHaveURL(/\/products$/);
       await expect(page.getByRole('heading', { name: /^products$/i })).toBeVisible();
-      await expect(page.getByRole('button', { name: new RegExp(`logout ${customer.name}`, 'i') })).toBeVisible();
+      await expect(
+        page.getByRole('button', { name: new RegExp(`logout ${customer.name}`, 'i') })
+      ).toBeVisible();
     });
 
     await test.step('Add a product to the cart', async () => {
@@ -79,7 +92,7 @@ test.describe('Customer ecommerce journey', () => {
         .click();
 
       const productDetailsAddButton = page.getByRole('button', {
-        name: /^add to cart$/i,
+        name: /^add to cart$/i
       });
 
       await expect(productDetailsAddButton).toBeVisible();

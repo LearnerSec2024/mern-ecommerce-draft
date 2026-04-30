@@ -197,10 +197,7 @@ const AdminProducts = () => {
 
         <label>
           Brand
-          <input
-            value={form.brand}
-            onChange={(event) => updateForm('brand', event.target.value)}
-          />
+          <input value={form.brand} onChange={(event) => updateForm('brand', event.target.value)} />
         </label>
 
         <label>
@@ -266,11 +263,7 @@ const AdminProducts = () => {
         {products.map((product) => (
           <article className="card split-row" key={product._id}>
             <div className="admin-product-summary">
-              <img
-                className="admin-product-thumbnail"
-                src={product.image}
-                alt={product.name}
-              />
+              <img className="admin-product-thumbnail" src={product.image} alt={product.name} />
 
               <div>
                 <h3>{product.name}</h3>
@@ -285,7 +278,11 @@ const AdminProducts = () => {
                 Edit
               </button>
 
-              <button className="button danger" type="button" onClick={() => archiveProduct(product._id)}>
+              <button
+                className="button danger"
+                type="button"
+                onClick={() => archiveProduct(product._id)}
+              >
                 Archive
               </button>
             </div>

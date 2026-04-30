@@ -26,12 +26,32 @@ const Login = () => {
     <section className="auth-card card">
       <h1>Login</h1>
       <form onSubmit={handleSubmit} className="stack">
-        <label>Email<input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required /></label>
-        <label>Password<input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required /></label>
-        <button className="button" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
+        <label>
+          Email
+          <input
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            required
+          />
+        </label>
+        <label>
+          Password
+          <input
+            type="password"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            required
+          />
+        </label>
+        <button className="button" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
       {error && <p className="error">{error}</p>}
-      <p className="muted">No account? <Link to="/register">Register</Link></p>
+      <p className="muted">
+        No account? <Link to="/register">Register</Link>
+      </p>
       <p className="muted small">Admin seed user: admin@example.com / Admin123!</p>
     </section>
   );

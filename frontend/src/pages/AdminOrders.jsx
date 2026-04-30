@@ -29,12 +29,17 @@ const AdminOrders = () => {
             <div className="split-row">
               <div>
                 <h3>Order #{order._id.slice(-6).toUpperCase()}</h3>
-                <p className="muted">{order.user?.name} · {order.user?.email}</p>
+                <p className="muted">
+                  {order.user?.name} · {order.user?.email}
+                </p>
               </div>
               <strong>${order.totalPrice.toFixed(2)}</strong>
             </div>
             <p>Status: {order.orderStatus}</p>
-            <select value={order.orderStatus} onChange={(e) => updateStatus(order._id, e.target.value)}>
+            <select
+              value={order.orderStatus}
+              onChange={(e) => updateStatus(order._id, e.target.value)}
+            >
               <option value="placed">Placed</option>
               <option value="processing">Processing</option>
               <option value="shipped">Shipped</option>

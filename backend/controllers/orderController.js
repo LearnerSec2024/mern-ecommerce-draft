@@ -6,7 +6,12 @@ const createOrder = async (req, res, next) => {
   try {
     const { shippingAddress, paymentMethod = 'mock-card' } = req.body;
 
-    if (!shippingAddress?.line1 || !shippingAddress?.city || !shippingAddress?.state || !shippingAddress?.postcode) {
+    if (
+      !shippingAddress?.line1 ||
+      !shippingAddress?.city ||
+      !shippingAddress?.state ||
+      !shippingAddress?.postcode
+    ) {
       res.status(400);
       throw new Error('Complete shipping address is required');
     }

@@ -5,14 +5,14 @@ const API_BASE_URL = `${process.env.PLAYWRIGHT_BACKEND_URL || 'http://127.0.0.1:
 test.describe('Advanced ecommerce UI interactions', () => {
   test('uses search keyboard action, slider, hover wishlist, dynamic content and drag to cart', async ({
     page,
-    request,
+    request
   }) => {
     const uniqueId = Date.now();
 
     const customer = {
       name: `Advanced UI Customer ${uniqueId}`,
       email: `advanced.ui.${uniqueId}@example.com`,
-      password: 'TestPassword123!',
+      password: 'TestPassword123!'
     };
 
     const catalogueResponse = await request.get(`${API_BASE_URL}/products`);
@@ -39,7 +39,8 @@ test.describe('Advanced ecommerce UI interactions', () => {
       await expect(page.getByTestId('register-submit-button')).toBeEnabled();
 
       const registerResponsePromise = page.waitForResponse(
-        (response) => response.url().includes('/api/auth/register') && response.request().method() === 'POST',
+        (response) =>
+          response.url().includes('/api/auth/register') && response.request().method() === 'POST'
       );
 
       await page.getByRole('button', { name: /^register$/i }).click();
@@ -47,7 +48,10 @@ test.describe('Advanced ecommerce UI interactions', () => {
       const registerResponse = await registerResponsePromise;
       const registerBody = await registerResponse.json().catch(() => ({}));
 
-      expect(registerResponse.status(), `Register API response: ${JSON.stringify(registerBody)}`).toBe(201);
+      expect(
+        registerResponse.status(),
+        `Register API response: ${JSON.stringify(registerBody)}`
+      ).toBe(201);
 
       await expect(page).toHaveURL(/\/products$/, { timeout: 10000 });
       await expect(page.getByRole('heading', { name: /^products$/i })).toBeVisible();
@@ -56,7 +60,7 @@ test.describe('Advanced ecommerce UI interactions', () => {
 
     await test.step('Assert delayed dynamic promo banner appears', async () => {
       await expect(page.getByTestId('delayed-deal-banner')).toBeVisible({
-        timeout: 3000,
+        timeout: 3000
       });
     });
 
@@ -107,11 +111,11 @@ test.describe('Advanced ecommerce UI interactions', () => {
 
       await firstCard.dragTo(dropZone, {
         sourcePosition: { x: 20, y: 20 },
-        targetPosition: { x: 40, y: 40 },
+        targetPosition: { x: 40, y: 40 }
       });
 
       await expect(page.getByTestId('drag-cart-message')).toBeVisible({
-        timeout: 10000,
+        timeout: 10000
       });
 
       await expect(page.getByTestId('drag-cart-message')).toContainText(/added to cart/i);

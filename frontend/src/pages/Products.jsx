@@ -245,19 +245,19 @@ const Products = () => {
           </p>
         </div>
 
-<div
-  className={
-    dropActive
-      ? 'cart-drop-zone sticky-cart-drop-zone active'
-      : 'cart-drop-zone sticky-cart-drop-zone'
-  }
-  onDragOver={handleDragOver}
-  onDragLeave={handleDragLeave}
-  onDrop={handleDrop}
-  data-testid="cart-drop-zone"
->
-  Drag product here to add to cart
-</div>
+        <div
+          className={
+            dropActive
+              ? 'cart-drop-zone sticky-cart-drop-zone active'
+              : 'cart-drop-zone sticky-cart-drop-zone'
+          }
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          data-testid="cart-drop-zone"
+        >
+          Drag product here to add to cart
+        </div>
       </div>
 
       {showDelayedDeal && (
@@ -353,11 +353,13 @@ const Products = () => {
       <p className="muted" data-testid="loaded-product-count">
         {isCategoryPaginationMode ? (
           <>
-            Showing {visibleProducts.length} products on page {pageNumber} of {pages}{' '}
-            ({totalProducts} total in {filters.category})
+            Showing {visibleProducts.length} products on page {pageNumber} of {pages} (
+            {totalProducts} total in {filters.category})
           </>
         ) : (
-          <>Loaded {products.length} of {totalProducts} products</>
+          <>
+            Loaded {products.length} of {totalProducts} products
+          </>
         )}
       </p>
 

@@ -17,7 +17,9 @@ const Navbar = () => {
   return (
     <header className="nav-wrap">
       <nav className="nav container">
-        <Link className="brand" to="/">MERN Shop</Link>
+        <Link className="brand" to="/">
+          MERN Shop
+        </Link>
         <div className="nav-links">
           <NavLink to="/products">Products</NavLink>
           {user && <NavLink to="/orders">My Orders</NavLink>}
@@ -29,7 +31,9 @@ const Navbar = () => {
               <NavLink to="/register">Register</NavLink>
             </>
           ) : (
-            <button className="link-button" onClick={handleLogout}>Logout {user.name}</button>
+            <button className="link-button" onClick={handleLogout}>
+              Logout {user.name}
+            </button>
           )}
         </div>
       </nav>
