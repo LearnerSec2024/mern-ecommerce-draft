@@ -153,6 +153,34 @@ Design your DOM intentionally messy/varied:
 - XPath
 - Role-based selectors (Playwright best practice)
 
+## ✅ 3. Locator Strategy Coverage - Implemented
+
+Implemented using the real ecommerce UI instead of adding a separate static demo section.  
+This keeps the original ecommerce look and customer journey intact while still giving learners varied locator practice.
+
+### Where This Is Implemented
+
+| Locator strategy     | Where implemented                                  | Example                                                                                                                                |
+| -------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Unique IDs           | Products filter controls                           | `#product-search`, `#category-filter`, `#sort-filter`, `#price-range`                                                                  |
+| Duplicate classes    | Product cards and shared UI classes                | `.product-card`, `.button`, `.status`                                                                                                  |
+| Dynamic IDs          | Product cards and order cards                      | `id="product-<mongoId>"`, `id="order-<mongoId>"`                                                                                       |
+| Data attributes      | Product cards, product actions and order cards     | `data-testid="product-card"`, `data-testid="product-card-title"`, `data-testid="product-card-add-to-cart"`, `data-testid="order-card"` |
+| Nested elements      | Product card image/body/title/action structure     | `.product-image-wrap img`, `.card-body h3`, `.card-body .button`                                                                       |
+| CSS selectors        | Product cards and product metadata                 | `article.product-card[id^="product-"]`, `[data-testid="product-card"][data-price]`                                                     |
+| XPath                | Product detail links inside product cards          | `//article[contains(@class, "product-card")]//a[contains(normalize-space(), "View details")]`                                          |
+| Role-based selectors | Accessible links, buttons, headings and comboboxes | `getByRole('heading')`, `getByRole('link')`, `getByRole('button')`, `getByRole('combobox')`                                            |
+| Shadow DOM           | Not implemented                                    | Optional advanced item; skipped to keep the ecommerce UI natural                                                                       |
+
+### Code Changes
+
+Implemented in:
+
+```txt
+frontend/src/components/ProductCard.jsx
+frontend/src/pages/Orders.jsx
+frontend/tests/e2e/locator-strategy.spec.js
+
 ---
 
 # 🔄 4. Navigation & Routing
@@ -332,3 +360,4 @@ Add:
 - Seeded test data (predictable results)
 
 ---
+```
