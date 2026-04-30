@@ -803,3 +803,147 @@ main.container { padding: 2rem 0 4rem; }
     align-items: flex-start;
   }
 }
+
+.order-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.order-summary-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.order-summary-header h2 {
+  margin: 0.2rem 0;
+}
+
+.order-summary-meta {
+  display: grid;
+  justify-items: end;
+  gap: 0.45rem;
+}
+
+.order-quick-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.order-quick-details span {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+}
+
+.order-details {
+  display: grid;
+  gap: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.order-section {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.order-section h3 {
+  margin: 0;
+}
+
+.order-items-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.order-item-row {
+  display: grid;
+  grid-template-columns: 76px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #f8fafc;
+}
+
+.order-item-image {
+  width: 76px;
+  height: 58px;
+  object-fit: cover;
+  border-radius: 14px;
+  background: white;
+  border: 1px solid var(--border);
+}
+
+.order-item-main {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.order-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+.order-total-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.order-total-row.grand-total {
+  border-bottom: 0;
+  font-size: 1.15rem;
+  color: var(--primary);
+}
+
+.order-status-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.order-status-grid span {
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: var(--primary);
+  font-weight: 900;
+}
+
+@media (max-width: 760px) {
+  .order-summary-header {
+    flex-direction: column;
+  }
+
+  .order-summary-meta {
+    justify-items: start;
+  }
+
+  .order-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-item-row {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .order-item-row > strong {
+    grid-column: 2;
+  }
+
+  .order-item-image {
+    width: 64px;
+    height: 54px;
+  }
+}
