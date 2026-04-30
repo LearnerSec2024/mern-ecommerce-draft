@@ -1,3 +1,4 @@
+import { downloadProductImage } from '../utils/productImageService.js';
 import Product from '../models/Product.js';
 import slugify from '../utils/slugify.js';
 
@@ -17,13 +18,16 @@ const getProducts = async (req, res, next) => {
       newest: { createdAt: -1 },
       price_asc: { price: 1 },
       price_desc: { price: -1 },
-      name_asc: { name: 1 }
+      name_asc: { name: 1 },
     };
 
     const [products, total, categories] = await Promise.all([
-      Product.find(query).sort(sortMap[sort] || sortMap.newest).skip(skip).limit(limit),
+      Product.find(query)
+        .sort(sortMap[sort] || sortMap.newest)
+        .skip(skip)
+        .limit(limit),
       Product.countDocuments(query),
-      Product.distinct('category', { isActive: true })
+      Product.distinct('category', { isActive: true }),
     ]);
 
     res.json({
@@ -31,7 +35,7 @@ const getProducts = async (req, res, next) => {
       categories,
       page,
       pages: Math.ceil(total / limit),
-      total
+      total,
     });
   } catch (error) {
     next(error);
@@ -96,5 +100,23 @@ const deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
+const generateProductImage = async (req, res, next) => {
+  try {
+    const { name, category } = req.body;
 
-export { getProducts, getProductById, createProduct, updateProduct, deleteProduct };
+    if (!name || !category) {
+      res.status(400);
+      throw new Error('Product name and category are required');
+    }
+
+    const image = await downloadProductImage({ name, category });
+
+    res.json({
+      image,
+      message: 'Product image downloaded successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export { getProducts, getProductById, createProduct, updateProduct, deleteProduct, generateProductImage };

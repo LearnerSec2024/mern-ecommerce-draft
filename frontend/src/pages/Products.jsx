@@ -245,15 +245,19 @@ const Products = () => {
           </p>
         </div>
 
-        <div
-          className={dropActive ? 'cart-drop-zone active' : 'cart-drop-zone'}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          data-testid="cart-drop-zone"
-        >
-          Drag product here to add to cart
-        </div>
+<div
+  className={
+    dropActive
+      ? 'cart-drop-zone sticky-cart-drop-zone active'
+      : 'cart-drop-zone sticky-cart-drop-zone'
+  }
+  onDragOver={handleDragOver}
+  onDragLeave={handleDragLeave}
+  onDrop={handleDrop}
+  data-testid="cart-drop-zone"
+>
+  Drag product here to add to cart
+</div>
       </div>
 
       {showDelayedDeal && (

@@ -35,19 +35,27 @@ const ProductCard = ({ product, wishlisted = false, onWishlistToggle }) => {
       data-product-id={product._id}
     >
       <div className="product-image-wrap">
-        {product.image && !imageError ? (
-          <img
-            src={product.image}
-            alt={product.name}
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div className={`product-image-fallback ${visual.className}`}>
-            <span>{visual.emoji}</span>
-            <strong>{product.name}</strong>
-            <small>{product.category}</small>
-          </div>
-        )}
+        <Link
+          to={`/products/${product._id}`}
+          className="product-image-link"
+          aria-label={`Open ${product.name} details`}
+          data-testid="product-image-link"
+        >
+          {product.image && !imageError ? (
+            <img
+              src={product.image}
+              alt={product.name}
+              draggable="false"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <div className={`product-image-fallback ${visual.className}`}>
+              <span>{visual.emoji}</span>
+              <strong>{product.name}</strong>
+              <small>{product.category}</small>
+            </div>
+          )}
+        </Link>
 
         <button
           className="wishlist-button"
