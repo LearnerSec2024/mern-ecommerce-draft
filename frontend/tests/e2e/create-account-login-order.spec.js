@@ -78,9 +78,15 @@ test.describe('Customer ecommerce journey', () => {
         .first()
         .click();
 
-      await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible();
+      const productDetailsAddButton = page.getByRole('button', {
+        name: /^add to cart$/i,
+      });
+
+      await expect(productDetailsAddButton).toBeVisible();
+
       await page.getByLabel(/quantity/i).fill('1');
-      await page.getByRole('button', { name: /add to cart/i }).click();
+
+      await productDetailsAddButton.click();
       await expect(page.getByText(/added to cart/i)).toBeVisible();
 
       await page.getByRole('link', { name: /cart \(1\)/i }).click();

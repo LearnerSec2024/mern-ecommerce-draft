@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../context/AuthContext.jsx';
+import { useCart } from '../context/CartContext.jsx';
 
 const categoryVisuals = {
   'Fruits & Vegetables': { emoji: '🥭', className: 'visual-fruit' },
@@ -13,7 +16,13 @@ const categoryVisuals = {
 };
 
 const ProductCard = ({ product, wishlisted = false, onWishlistToggle }) => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const { addToCart } = useCart();
+
   const [imageError, setImageError] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [quickAddMessage, setQuickAddMessage] = useState('');
 
   const visual = categoryVisuals[product.category] || {
     emoji: '🛒',
@@ -24,6 +33,25 @@ const ProductCard = ({ product, wishlisted = false, onWishlistToggle }) => {
     event.dataTransfer.effectAllowed = 'copy';
     event.dataTransfer.setData('application/x-product-id', product._id);
     event.dataTransfer.setData('text/plain', product.name);
+  };
+
+  const handleQuickAdd = async () => {
+    setQuickAddMessage('');
+
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: '/products' } });
+      return;
+    }
+
+    try {
+      setAdding(true);
+      await addToCart(product._id, 1);
+      setQuickAddMessage('Added to cart');
+    } catch (error) {
+      setQuickAddMessage(error.response?.data?.message || 'Could not add to cart');
+    } finally {
+      setAdding(false);
+    }
   };
 
   return (
@@ -81,6 +109,25 @@ const ProductCard = ({ product, wishlisted = false, onWishlistToggle }) => {
         <span className={product.stock > 0 ? 'status ok' : 'status danger'}>
           {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
         </span>
+
+        <button
+          className="button product-add-button"
+          type="button"
+          disabled={adding || product.stock <= 0}
+          onClick={handleQuickAdd}
+          data-testid="product-card-add-to-cart"
+        >
+          {adding ? 'Adding...' : 'Click to add to Cart'}
+        </button>
+
+        {quickAddMessage && (
+          <p
+            className={quickAddMessage === 'Added to cart' ? 'success small' : 'error small'}
+            data-testid="product-card-add-message"
+          >
+            {quickAddMessage}
+          </p>
+        )}
 
         <Link to={`/products/${product._id}`} className="button ghost">
           View details
