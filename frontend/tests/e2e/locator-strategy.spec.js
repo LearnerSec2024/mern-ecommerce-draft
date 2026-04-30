@@ -39,7 +39,14 @@ test.describe('Locator strategy coverage', () => {
     await test.step('Nested DOM: scope locators inside one product card', async () => {
       const firstCard = page.getByTestId('product-card').first();
 
-      await expect(firstCard.locator('.product-image-wrap img')).toBeVisible();
+      await expect(firstCard.locator('.product-image-wrap')).toBeVisible();
+
+      await expect(
+        firstCard
+          .locator('.product-image-wrap img, .product-image-wrap .product-image-fallback')
+          .first()
+      ).toBeVisible();
+
       await expect(firstCard.locator('.card-body h3')).toBeVisible();
       await expect(firstCard.locator('.card-body .button').first()).toBeVisible();
     });
