@@ -109,9 +109,21 @@ test.describe('Customer ecommerce journey', () => {
       await expect(page).toHaveURL(/\/orders$/);
       await expect(page.getByRole('heading', { name: /my orders/i })).toBeVisible();
       await expect(page.getByText(/order #/i).first()).toBeVisible();
-      await expect(page.getByText(/status:/i).first()).toBeVisible();
-      await expect(page.getByText(/placed/i).first()).toBeVisible();
-      await expect(page.getByText(/payment: paid/i).first()).toBeVisible();
+      await expect(page.getByText(/^placed$/i).first()).toBeVisible();
+      await expect(page.getByText(/^paid$/i).first()).toBeVisible();
+      await expect(page.getByText(/payment: mock card/i).first()).toBeVisible();
+
+      await page
+        .getByRole('button', { name: /view order details/i })
+        .first()
+        .click();
+
+      await expect(page.getByTestId('order-details').first()).toBeVisible();
+      await expect(page.getByRole('heading', { name: /products ordered/i })).toBeVisible();
+      await expect(page.getByRole('heading', { name: /shipping address/i })).toBeVisible();
+      await expect(page.getByRole('heading', { name: /order totals/i })).toBeVisible();
+      await expect(page.getByText(/order status: placed/i)).toBeVisible();
+      await expect(page.getByText(/payment status: paid/i)).toBeVisible();
     });
   });
 });
