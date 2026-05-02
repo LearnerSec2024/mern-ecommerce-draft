@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
 
 const PRODUCTS_PER_PAGE = 8;
-const MAX_PRICE = 300;
+const MAX_PRICE = 10000;
 
 const Products = () => {
   const navigate = useNavigate();
